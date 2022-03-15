@@ -9,15 +9,15 @@ requirements:
   conda:
     channels:
       - conda-forge
-      packages:
-        - geoglows
-        - hydrostats
-        - pandas
-        - requests
-        - plotly
-        - numpy
-        - scipy
-        - hs_restclient
+    packages:
+      - geoglows
+      - hydrostats
+      - pandas
+      - requests
+      - plotly
+      - numpy
+      - scipy
+      - hs_restclient
   pip:
 
 post:
