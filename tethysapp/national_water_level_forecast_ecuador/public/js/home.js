@@ -1,11 +1,14 @@
 // Getting the csrf token
-function get_requestData (watershed, subbasin, streamcomid, stationcode, stationname, startdate){
+function get_requestData (watershed, subbasin, streamcomid, stationcode, stationname, startdate, stationname_rt, stationid_rt, stationcat_rt){
   getdata = {
       'watershed': watershed,
       'subbasin': subbasin,
       'streamcomid': streamcomid,
       'stationcode':stationcode,
       'stationname': stationname,
+      'stationname_rt': stationname_rt,
+      'stationid_rt': stationid_rt,
+      'stationcat_rt': stationcat_rt
   };
   $.ajax({
       url: 'get-request-data',
@@ -27,7 +30,7 @@ function get_requestData (watershed, subbasin, streamcomid, stationcode, station
       },
       success: function (data) {
         console.log(data)
-        get_hydrographs (watershed, subbasin, streamcomid, stationcode, stationname, startdate);
+        get_hydrographs (watershed, subbasin, streamcomid, stationcode, stationname, startdate, stationname_rt, stationid_rt, stationcat_rt);
 
       }
   })
@@ -131,7 +134,7 @@ let capabilities = $.ajax(ajax_url, {
 	success: function() {
 		let x = capabilities.responseText
 		.split('<FeatureTypeList>')[1]
-		.split('HS-77951ba9bcf04ac5bc68ae3be2acfd90:south_america-ecuador-geoglows-drainage_line')[1]
+		.split('HS-77951ba9bcf04ac5bc68ae3be2acfd90:Selected_Stations_Ecuador_WL')[1]
 		.split('LatLongBoundingBox')[1]
 		.split('/></FeatureType>')[0];
 
@@ -151,7 +154,7 @@ let capabilities = $.ajax(ajax_url, {
 	}
 });
 
-function get_hydrographs (watershed, subbasin, streamcomid, stationcode, stationname, startdate) {
+function get_hydrographs (watershed, subbasin, streamcomid, stationcode, stationname, startdate, stationname_rt, stationid_rt, stationcat_rt) {
 	$('#hydrographs-loading').removeClass('hidden');
 	m_downloaded_historical_streamflow = true;
     $.ajax({
@@ -162,7 +165,10 @@ function get_hydrographs (watershed, subbasin, streamcomid, stationcode, station
             'subbasin': subbasin,
             'streamcomid': streamcomid,
             'stationcode': stationcode,
-            'stationname': stationname
+            'stationname': stationname,
+            'stationname_rt': stationname_rt,
+            'stationid_rt': stationid_rt,
+            'stationcat_rt': stationcat_rt
         },
         error: function() {
         	$('#hydrographs-loading').addClass('hidden');
@@ -226,7 +232,7 @@ function get_hydrographs (watershed, subbasin, streamcomid, stationcode, station
         		get_scatterPlot (watershed, subbasin, streamcomid, stationcode, stationname);
         		get_scatterPlotLogScale (watershed, subbasin, streamcomid, stationcode, stationname);
         		makeDefaultTable(watershed, subbasin, streamcomid, stationcode, stationname);
-        		get_time_series_bc(watershed, subbasin, streamcomid, stationcode, stationname, startdate);
+        		get_time_series_bc(watershed, subbasin, streamcomid, stationcode, stationname, startdate, stationname_rt, stationid_rt, stationcat_rt);
 
            		 } else if (data.error) {
            		 	$('#hydrographs-loading').addClass('hidden');
@@ -528,12 +534,16 @@ function map_events() {
 		         		//streamcomid = result["features"][0]["properties"]["COMID"];
 		         		streamcomid = result["features"][0]["properties"]["new_COMID"];
 		         		basin = result["features"][0]["properties"]["Cuenca_Hid"];
+		         		stationname_rt = result["features"][0]["properties"]["puobnomb"];
+		         		stationid_rt = result["features"][0]["properties"]["esta__id"];
+		         		stationcat_rt = result["features"][0]["properties"]["catenomb"];
+
 		         		$("#station-info").append('<h3 id="Station-Name-Tab">Current Station: '+ stationname
                         			+ '</h3><h5 id="Station-Code-Tab">Station Code: '
                         			+ stationcode + '</h3><h5 id="COMID-Tab">Station COMID: '
                         			+ streamcomid+ '</h5><h5>Basin: '+ basin + '</h5>');
 
-                        get_requestData(watershed, subbasin, streamcomid, stationcode, stationname, startdate);
+                        get_requestData(watershed, subbasin, streamcomid, stationcode, stationname, startdate, stationname_rt, stationid_rt, stationcat_rt);
                     },
                     error: function(e){
                       console.log(e);
@@ -616,7 +626,7 @@ $(function() {
         startdate = startdate.replace("-","");
 
         $loading.removeClass('hidden');
-        get_time_series_bc(watershed, subbasin, streamcomid, stationcode, stationname, startdate);
+        get_time_series_bc(watershed, subbasin, streamcomid, stationcode, stationname, startdate, stationname_rt, stationid_rt, stationcat_rt);
     });
 
 });
@@ -874,7 +884,7 @@ function get_available_dates(watershed, subbasin, comid) {
     });
 }
 
-function get_time_series_bc(watershed, subbasin, streamcomid, stationcode, stationname, startdate) {
+function get_time_series_bc(watershed, subbasin, streamcomid, stationcode, stationname, startdate, stationname_rt, stationid_rt, stationcat_rt) {
     $('#forecast-bc-loading').removeClass('hidden');
     $('#forecast-bc-chart').addClass('hidden');
     $('#dates').addClass('hidden');
@@ -888,6 +898,9 @@ function get_time_series_bc(watershed, subbasin, streamcomid, stationcode, stati
             'stationcode': stationcode,
             'stationname': stationname,
             'startdate': startdate,
+            'stationname_rt': stationname_rt,
+            'stationid_rt': stationid_rt,
+            'stationcat_rt': stationcat_rt,
         },
         error: function() {
         	$('#forecast-bc-loading').addClass('hidden');
