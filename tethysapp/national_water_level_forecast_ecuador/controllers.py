@@ -785,21 +785,24 @@ def get_time_series_bc(request):
             max_factor = tmp.copy()
             min_factor.loc[min_factor[column] >= min_simulated, column] = 1
             min_index_value = min_factor[min_factor[column] != 1].index.tolist()
+
             for element in min_index_value:
-                min_factor[column].loc[min_factor.index == element] = tmp[column].loc[
-                                                                          tmp.index == element] / min_simulated
+                min_factor[column].loc[min_factor.index == element] = tmp[column].loc[tmp.index == element] / min_simulated
+
             max_factor.loc[max_factor[column] <= max_simulated, column] = 1
             max_index_value = max_factor[max_factor[column] != 1].index.tolist()
+
             for element in max_index_value:
-                max_factor[column].loc[max_factor.index == element] = tmp[column].loc[
-                                                                          tmp.index == element] / max_simulated
+                max_factor[column].loc[max_factor.index == element] = tmp[column].loc[tmp.index == element] / max_simulated
+
             tmp.loc[tmp[column] <= min_simulated, column] = min_simulated
             tmp.loc[tmp[column] >= max_simulated, column] = max_simulated
+
             forecast_ens_df.update(pd.DataFrame(tmp[column].values, index=tmp.index, columns=[column]))
             min_factor_df.update(pd.DataFrame(min_factor[column].values, index=min_factor.index, columns=[column]))
             max_factor_df.update(pd.DataFrame(max_factor[column].values, index=max_factor.index, columns=[column]))
 
-        corrected_ensembles = geoglows.bias.correct_forecast(forecast_ens, simulated_df, observed_adjusted)
+        corrected_ensembles = geoglows.bias.correct_forecast(forecast_ens_df, simulated_df, observed_adjusted)
         corrected_ensembles = corrected_ensembles.multiply(min_factor_df, axis=0)
         corrected_ensembles = corrected_ensembles.multiply(max_factor_df, axis=0)
         corrected_ensembles = corrected_ensembles + min_value
@@ -859,6 +862,12 @@ def get_time_series_bc(request):
         for mes in meses:
             values = forecast_record.loc[forecast_record.index.month == mes]
 
+            monthly_simulated = simulated_df[simulated_df.index.month == mes].dropna()
+            monthly_observed = observed_df[observed_df.index.month == mes].dropna()
+
+            min_simulated = np.min(monthly_simulated.iloc[:, 0].to_list())
+            max_simulated = np.max(monthly_simulated.iloc[:, 0].to_list())
+
             min_factor_records_df = values.copy()
             max_factor_records_df = values.copy()
             fixed_records_df = values.copy()
@@ -877,15 +886,16 @@ def get_time_series_bc(request):
             max_index_value = max_factor[max_factor[column_records] != 1].index.tolist()
 
             for element in max_index_value:
-                max_factor[column_records].loc[max_factor.index == element] = tmp[column_records].loc[tmp.index == column_records] / max_simulated
+                max_factor[column_records].loc[max_factor.index == element] = tmp[column_records].loc[tmp.index == element] / max_simulated
 
             tmp.loc[tmp[column_records] <= min_simulated, column_records] = min_simulated
             tmp.loc[tmp[column_records] >= max_simulated, column_records] = max_simulated
+
             fixed_records_df.update(pd.DataFrame(tmp[column_records].values, index=tmp.index, columns=[column_records]))
             min_factor_records_df.update(pd.DataFrame(min_factor[column_records].values, index=min_factor.index, columns=[column_records]))
             max_factor_records_df.update(pd.DataFrame(max_factor[column_records].values, index=max_factor.index, columns=[column_records]))
 
-            corrected_values = geoglows.bias.correct_forecast(values, simulated_df, observed_adjusted)
+            corrected_values = geoglows.bias.correct_forecast(fixed_records_df, simulated_df, observed_adjusted)
             corrected_values = corrected_values.multiply(min_factor_records_df, axis=0)
             corrected_values = corrected_values.multiply(max_factor_records_df, axis=0)
             corrected_values = corrected_values + min_value

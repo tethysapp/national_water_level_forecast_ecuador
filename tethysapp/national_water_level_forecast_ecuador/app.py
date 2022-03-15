@@ -13,7 +13,7 @@ class NationalWaterLevelForecastEcuador(TethysAppBase):
     root_url = 'national-water-level-forecast-ecuador'
     color = '#2c3e50'
     description = ''
-    tags = ''
+    tags = '"Hydrology", "Time Series", "Bias Correction", "Hydrostats", "GEOGloWS", "Water Level", "Ecuador"'
     enable_feedback = False
     feedback_emails = []
 
