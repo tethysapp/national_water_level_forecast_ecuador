@@ -8,10 +8,10 @@ class NationalWaterLevelForecastEcuador(TethysAppBase):
 
     name = 'National Water Level Forecast Ecuador'
     index = 'national_water_level_forecast_ecuador:home'
-    icon = 'national_water_level_forecast_ecuador/images/ecuador_logo.png'
+    icon = 'national_water_level_forecast_ecuador/images/NWLF.jpeg'
     package = 'national_water_level_forecast_ecuador'
     root_url = 'national-water-level-forecast-ecuador'
-    color = '#2c3e50'
+    color = '#4074dd'
     description = ''
     tags = '"Hydrology", "Time Series", "Bias Correction", "Hydrostats", "GEOGloWS", "Water Level", "Ecuador"'
     enable_feedback = False
@@ -87,11 +87,11 @@ class NationalWaterLevelForecastEcuador(TethysAppBase):
                 url='get-time-series-bc',
                 controller='national_water_level_forecast_ecuador.controllers.get_time_series_bc'
             ),
-            UrlMap(
-                name='get_observed_water_level_csv',
-                url='get-observed-water-level-csv',
-                controller='national_water_level_forecast_ecuador.controllers.get_observed_water_level_csv'
-            ),
+            #UrlMap(
+            #    name='get_observed_water_level_csv',
+            #    url='get-observed-water-level-csv',
+            #    controller='national_water_level_forecast_ecuador.controllers.get_observed_water_level_csv'
+            #),
             UrlMap(
                 name='get_simulated_bc_water_level_csv',
                 url='get-simulated-bc-water-level-csv',

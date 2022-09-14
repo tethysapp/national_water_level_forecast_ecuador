@@ -87,7 +87,8 @@ function init_map() {
 
 	var streams = new ol.layer.Image({
 		source: new ol.source.ImageWMS({
-			url: 'https://geoserver.hydroshare.org/geoserver/HS-77951ba9bcf04ac5bc68ae3be2acfd90/wms',
+			//url: 'https://geoserver.hydroshare.org/geoserver/HS-77951ba9bcf04ac5bc68ae3be2acfd90/wms',
+			url: 'https://tethys-inamhi.westus2.cloudapp.azure.com/geoserver/ecuador_hydroviewer/wms',
 			params: { 'LAYERS': 'south_america-ecuador-geoglows-drainage_line' },
 			serverType: 'geoserver',
 			crossOrigin: 'Anonymous'
@@ -99,7 +100,8 @@ function init_map() {
 
 	var stations = new ol.layer.Image({
 		source: new ol.source.ImageWMS({
-			url: 'https://geoserver.hydroshare.org/geoserver/HS-77951ba9bcf04ac5bc68ae3be2acfd90/wms',
+			//url: 'https://geoserver.hydroshare.org/geoserver/HS-77951ba9bcf04ac5bc68ae3be2acfd90/wms',
+			url: 'https://tethys-inamhi.westus2.cloudapp.azure.com/geoserver/ecuador_hydroviewer/wms',
 			params: { 'LAYERS': 'Selected_Stations_Ecuador_WL' },
 			serverType: 'geoserver',
 			crossOrigin: 'Anonymous'
@@ -121,7 +123,8 @@ function init_map() {
 
 }
 
-let ajax_url = 'https://geoserver.hydroshare.org/geoserver/wfs?request=GetCapabilities';
+//let ajax_url = 'https://geoserver.hydroshare.org/geoserver/wfs?request=GetCapabilities';
+let ajax_url = 'https://tethys-inamhi.westus2.cloudapp.azure.com/geoserver/wfs?request=GetCapabilities';
 
 let capabilities = $.ajax(ajax_url, {
 	type: 'GET',
@@ -134,7 +137,8 @@ let capabilities = $.ajax(ajax_url, {
 	success: function() {
 		let x = capabilities.responseText
 		.split('<FeatureTypeList>')[1]
-		.split('HS-77951ba9bcf04ac5bc68ae3be2acfd90:Selected_Stations_Ecuador_WL')[1]
+		//.split('HS-77951ba9bcf04ac5bc68ae3be2acfd90:Selected_Stations_Ecuador_WL')[1]
+		.split('ecuador_hydroviewer:Selected_Stations_Ecuador_WL')[1]
 		.split('LatLongBoundingBox')[1]
 		.split('/></FeatureType>')[0];
 
@@ -197,6 +201,7 @@ function get_hydrographs (watershed, subbasin, streamcomid, stationcode, station
                 	'yaxis.autorange': true
                 });
 
+                /*
                 var params_obs = {
                     watershed: watershed,
                 	subbasin: subbasin,
@@ -211,6 +216,7 @@ function get_hydrographs (watershed, subbasin, streamcomid, stationcode, station
                 });
 
                 $('#download_observed_water_level').removeClass('hidden');
+                */
 
                 var params_sim_bc = {
                     watershed: watershed,
@@ -631,6 +637,7 @@ $(function() {
 
 });
 
+
 function getRegionGeoJsons() {
 
     let geojsons = region_index[$("#regions").val()]['geojsons'];
@@ -642,7 +649,7 @@ function getRegionGeoJsons() {
 
         var regionStyle = new ol.style.Style({
             stroke: new ol.style.Stroke({
-                color: 'red',
+                color: '#0050a0',
                 width: 3
             })
         });
@@ -666,6 +673,41 @@ function getRegionGeoJsons() {
     }
 }
 
+function getBasinGeoJsons() {
+
+    let basins = region_index2[$("#basins").val()]['geojsons'];
+    console.log(basins)
+    for (let i in basins) {
+        var regionsSource = new ol.source.Vector({
+           url: staticGeoJSON2 + basins[i],
+           format: new ol.format.GeoJSON()
+        });
+
+        var regionStyle = new ol.style.Style({
+            stroke: new ol.style.Stroke({
+                color: '#0050a0',
+                width: 3
+            })
+        });
+
+        var regionsLayer = new ol.layer.Vector({
+            name: 'myRegion',
+            source: regionsSource,
+            style: regionStyle
+        });
+
+        map.getLayers().forEach(function(regionsLayer) {
+        if (regionsLayer.get('name')=='myRegion')
+            map.removeLayer(regionsLayer);
+        });
+        map.addLayer(regionsLayer)
+
+        setTimeout(function() {
+            var myExtent = regionsLayer.getSource().getExtent();
+            map.getView().fit(myExtent, map.getSize());
+        }, 500);
+    }
+}
 $('#stp-stream-toggle').on('change', function() {
     wmsLayer.setVisible($('#stp-stream-toggle').prop('checked'))
 })
@@ -676,6 +718,8 @@ $('#stp-stations-toggle').on('change', function() {
 // Regions gizmo listener
 $('#regions').change(function() {getRegionGeoJsons()});
 
+// Basins gizmo listener
+$('#basins').change(function() {getBasinGeoJsons()});
 
 // Function for the select2 metric selection tool
 $(document).ready(function() {

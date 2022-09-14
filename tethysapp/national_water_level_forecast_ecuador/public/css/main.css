@@ -45,8 +45,8 @@
   max-height: 90%;
   overflow-y: auto;
   margin: 5px;
-  color: white;
-  background: #286090;
+  color: #fcbf10;
+  background: #20295c;
   border: 1px #ddd solid;
   z-index: 999;
 }

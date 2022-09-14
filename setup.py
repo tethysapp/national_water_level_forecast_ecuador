@@ -16,12 +16,12 @@ resource_files += find_resource_files('tethysapp/' + app_package + '/workspaces'
 
 setup(
     name=release_package,
-    version='1.0',
+    version='1.1',
     description='This app uses the Bias Correction, the GESS forecast, and the observed water level to create a  National Hydrological Forecast Model in Ecuador.',
     long_description='',
     keywords='"Hydrology", "Time Series", "Bias Correction", "Hydrostats", "GEOGloWS", "Water Level", "Ecuador"',
-    author='Darlly Judith Rojas-Lesmes',
-    author_email='djrojasl@unal.edu.co',
+    author='Darlly Judith Rojas-Lesmes, Jorge Luis Sanchez-Lozano, Karina Larco',
+    author_email='djrojasl@unal.edu.co, jorgessanchez7@gmail.com, karynina3@gmail.com',
     url='',
     license='',
     packages=find_namespace_packages(),

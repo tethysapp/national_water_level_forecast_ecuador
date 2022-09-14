@@ -8,18 +8,17 @@
 {% endblock %}
 
 {% block app_content %}
-<div id="map" class="map" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html"
-     xmlns="http://www.w3.org/1999/html">
+<div id="map" class="map" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
     <div id="map-view-legend" class="map-view-legend ol-unselectable ol-control">
       <div>
         <svg width="20" height="20" viewPort="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg">
-          <polyline points="19 1, 1 6, 19 14, 1 19" stroke="#0000FF" fill="transparent" stroke-width="2"/>
+          <polyline points="19 1, 1 6, 19 14, 1 19" stroke="#4074dd" fill="transparent" stroke-width="2"/>
         </svg>
         Streams <input id="stp-stream-toggle" class="toggle-layer" type="checkbox" checked data-toggle="toggle" data-size="mini">
       </div>
       <div>
         <svg width="20" height="20" viewPort="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg">
-          <polyline points="0 10, 0 0, 10 0, 10 10, 0 10" stroke="rgba(255,0,0,1)" fill="rgba(255,0,0,1)" stroke-width="2"/>
+          <polyline points="0 10, 0 0, 10 0, 10 10, 0 10" stroke="#e61e29" fill="#e61e29" stroke-width="2"/>
         </svg>
         Stations <input id="stp-stations-toggle" class="toggle-layer" type="checkbox" checked data-toggle="toggle" data-size="mini">
       </div>
@@ -27,9 +26,13 @@
         <br>
         {% gizmo select_input regions %}
       </div>
+      <div>
+        <br>
+        {% gizmo select_input basins %}
+      </div>
     </div>
-    <img id="featureLoader" style="display: none; position:fixed; z-index: 100; left : 0; bottom : 0; right : 0; top : 0; margin:auto;" src="{% static 'national_water_level_forecast_ecuador/images/loader2.gif' %}">
-  </div>
+</div>
+<img id="featureLoader" style="display: none; position:fixed; z-index: 100; left : 0; bottom : 0; right : 0; top : 0; margin:auto;" src="{% static 'national_water_level_forecast_ecuador/images/loader2.gif' %}">
 {% endblock %}
 
 {% block header_buttons %}
@@ -59,6 +62,8 @@
               <div align="right">
                 <img class="obslogos" src="{% static 'national_water_level_forecast_ecuador/images/byu_logo.png' %}">
                 <img class="obslogos" src="{% static 'national_water_level_forecast_ecuador/images/my-icon-inamhi.png' %}">
+                <img class="obslogos" src="{% static 'national_water_level_forecast_ecuador/images/Servir_logo.jpeg' %}">
+                <img class="obslogos" src="{% static 'national_water_level_forecast_ecuador/images/EcoCiencia.png' %}">
               </div>
             </div>
             <div id="interaction"></div>
@@ -81,11 +86,13 @@
                   <div id="hydrographs-chart"></div>
                   <p> Download Data </p>
                   <div id="Download_hydrographs">
+                    <!--
                     <div id="download_observed_water_level" class="btn-group hidden long-term-select" role="group">
                       <a class="btn btn-success" role="button" id="submit-download-observed-water-level">
                         <span class="glyphicon glyphicon-play"></span> Observed Water Level
                       </a>
                     </div>
+                    -->
                     <div id="download_simulated_bc_water_level" class="btn-group hidden long-term-select" role="group">
                       <a class="btn btn-info" role="button" id="submit-download-simulated-bc-water-level">
                         <span class="glyphicon glyphicon-play"></span> Corrected Simulated Water Level
@@ -232,16 +239,28 @@
           <h5 class="modal-title" id="help-modal-label">National Water Level Forecast</h5>
         </div>
         <div class="modal-body">
-          <p>The National Water Level Forecast web application customized for Ecuador is a light-weight application for evaluate the bias-corrected simulated values for the GEOGloWS ECMWF Streamflow Prediction Tool in Ecuador.</p>
-          <p>This app allows us to use the hydrostats functionality in order to evaluate how accurate is the bias corrected historical simulation from the GEOGloWS ECMWF Streamflow Prediction Tool in XXX Gauging Stations in Ecuador.</p>
-          <p>Additionally, this bias-correction is extended to the GEOGloWS ECMWF Streamflow Prediction Tool short term forecast</p>
-          <p>Users can click on any station in the map to retrieve observed and simulated data.</p>
+          <p>La aplicación National Water Level Forecast personalizada para Ecuador es una aplicación ligera que evalua los valores simulados corregidos por el sesgo para la herramienta de predicción de caudales de GEOGloWS ECMWF en Ecuador.</p>
+          <p>Esta aplicación nos permite utilizar la funcionalidad de hydrostats para evaluar la precisión de la simulación histórica corregida por el sesgo de la herramienta de predicción de caudales de GEOGloWS ECMWF en 166 estaciones de aforo en Ecuador.</p>
+          <p>Además, esta corrección de sesgo se extiende a la previsión a corto plazo de la herramienta de predicción de caudales de GEOGloWS ECMWF.</p>
+          <p>Los usuarios pueden hacer clic en cualquier estación del mapa para obtner los datos observados y simulados.</p>
           <ol>
-            <li> The first tab displays a plot of the historical observed data, the GEOGloWS ECMWF Streamflow Prediction Tool bias-corrected simulation data.</li>
-            <li> The second tab displays the Visual Analysis included in Hydrostats. It includes plots for the daily average streamflow, the monthly average streamflow, the scatter plot, and the scatter plot in the log scale.</li>
-            <li> The third tab includes a table report with some predefined list of metrics. It also allows you select a set of metrics that you want to use in order to validate the bias-corrected historical simulation of the Streamflow Prediction Tool.</li>
-            <li> The fourth tab displays a plot with the GEOGloWS ECMWF Streamflow Prediction Tool bias-corrected forecast data.</li>
+            <li> La primera pestaña muestra un gráfico de los datos históricos observados, los datos de simulación corregidos por el sesgo de la herramienta de predicción de caudales GEOGloWS ECMWF.</li>
+            <li> La segunda pestaña muestra el Análisis Visual incluido en Hydrostats. Incluye gráficos para el caudal medio diario, el caudal medio mensual, el gráfico de dispersión y el gráfico de dispersión en la escala logarítmica.</li>
+            <li> La tercera pestaña incluye un informe de tabla con alguna lista predefinida de métricas. También permite seleccionar un conjunto de métricas que se desea utilizar para validar la simulación histórica con corrección de sesgo de la herramienta de predicción de caudales.</li>
+            <li> La cuarta pestaña muestra un gráfico con los datos de previsión corregidos por el sesgo de la herramienta de predicción de caudales de GEOGloWS ECMWF.</li>
           </ol>
+
+          <p style="color:#e61e29;">Disclaimer: El usuario debe considerar que estas simulaciones y pronósticos son una referencia
+            que utiliza la herramienta de predicción del GEOGloWS ECMWF y datos observados de las estaciones hidrológicas
+            del INAMHI para estimar el rango más probable de niveles y caudales por encima o debajo del promedio
+            histórico simulado.
+          </p>
+
+          <ol style="color:#e61e29;">
+            <li>El usuario debe tener en cuenta la probabilidad de que una predicción no sea siempre  correcta.</li>
+            <li>El usuario de esta herramienta acepta de antemano la forma y uso de la información.</li>
+          </ol style="color:#e61e29;">
+
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>

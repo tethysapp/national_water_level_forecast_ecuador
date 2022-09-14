@@ -88,12 +88,21 @@ def home(request):
         original=True,
         options=[(region_index[opt]['name'], opt) for opt in region_index]
     )
+    region_index2 = json.load(open(os.path.join(os.path.dirname(__file__), 'public', 'geojson2', 'index2.json')))
+    basins = SelectInput(
+        display_text='Zoom to a Basin:',
+        name='basins',
+        multiple=False,
+        original=True,
+        options=[(region_index2[opt]['name'], opt) for opt in region_index2]
+    )
 
     context = {
         "metric_loop_list": metric_loop_list,
         "geoserver_endpoint": geoserver_endpoint,
         "date_picker": date_picker,
-        "regions": regions
+        "regions": regions,
+        "basins": basins
     }
 
     return render(request, 'national_water_level_forecast_ecuador/home.html', context)
@@ -1110,49 +1119,49 @@ def get_available_dates(request):
         "available_dates": json.dumps(dates)
     })
 
-def get_observed_water_level_csv(request):
-    """
-    Get observed data from csv files in Hydroshare
-    """
-
-    try:
-        get_data = request.GET
-        watershed = get_data['watershed']
-        subbasin = get_data['subbasin']
-        comid = get_data['streamcomid']
-        codEstacion = get_data['stationcode']
-        nomEstacion = get_data['stationname']
-
-        '''Get Observed Data'''
-        observed_data_file_path = os.path.join(app.get_app_workspace().path, 'observed_data.json')
-        observed_df = pd.read_json(observed_data_file_path, convert_dates=True)
-        observed_df.index = pd.to_datetime(observed_df.index, unit='ms')
-        observed_df.sort_index(inplace=True, ascending=True)
-
-        datesObservedWaterLevel = observed_df.index.tolist()
-        observedWaterLevel = observed_df.iloc[:, 0].values
-        observedWaterLevel.tolist()
-
-        pairs = [list(a) for a in zip(datesObservedWaterLevel, observedWaterLevel)]
-
-        response = HttpResponse(content_type='text/csv')
-        response['Content-Disposition'] = 'attachment; filename=observed_water_level_{0}.csv'.format(codEstacion)
-
-        writer = csv_writer(response)
-        writer.writerow(['Datetime', 'Water Level (m)'])
-
-        for row_data in pairs:
-            writer.writerow(row_data)
-
-        return response
-
-    except Exception as e:
-        exc_type, exc_obj, exc_tb = sys.exc_info()
-        print("error: " + str(e))
-        print("line: " + str(exc_tb.tb_lineno))
-        return JsonResponse({
-            'error': f'{"error: " + str(e), "line: " + str(exc_tb.tb_lineno)}',
-        })
+#def get_observed_water_level_csv(request):
+#    """
+#    Get observed data from csv files in Hydroshare
+#    """
+#
+#    try:
+#        get_data = request.GET
+#        watershed = get_data['watershed']
+#        subbasin = get_data['subbasin']
+#        comid = get_data['streamcomid']
+#        codEstacion = get_data['stationcode']
+#        nomEstacion = get_data['stationname']
+#
+#        '''Get Observed Data'''
+#        observed_data_file_path = os.path.join(app.get_app_workspace().path, 'observed_data.json')
+#        observed_df = pd.read_json(observed_data_file_path, convert_dates=True)
+#        observed_df.index = pd.to_datetime(observed_df.index, unit='ms')
+#        observed_df.sort_index(inplace=True, ascending=True)
+#
+#        datesObservedWaterLevel = observed_df.index.tolist()
+#        observedWaterLevel = observed_df.iloc[:, 0].values
+#        observedWaterLevel.tolist()
+#
+#        pairs = [list(a) for a in zip(datesObservedWaterLevel, observedWaterLevel)]
+#
+#        response = HttpResponse(content_type='text/csv')
+#        response['Content-Disposition'] = 'attachment; filename=observed_water_level_{0}.csv'.format(codEstacion)
+#
+#        writer = csv_writer(response)
+#        writer.writerow(['Datetime', 'Water Level (m)'])
+#
+#        for row_data in pairs:
+#            writer.writerow(row_data)
+#
+#        return response
+#
+#    except Exception as e:
+#        exc_type, exc_obj, exc_tb = sys.exc_info()
+#        print("error: " + str(e))
+#        print("line: " + str(exc_tb.tb_lineno))
+#        return JsonResponse({
+#            'error': f'{"error: " + str(e), "line: " + str(exc_tb.tb_lineno)}',
+#        })
 
 def get_simulated_bc_water_level_csv(request):
     """
