@@ -78,10 +78,7 @@ function toggleAcc(layerID) {
 function init_map() {
 
 	var base_layer = new ol.layer.Tile({
-		source: new ol.source.BingMaps({
-			key: 'eLVu8tDRPeQqmBlKAjcw~82nOqZJe2EpKmqd-kQrSmg~AocUZ43djJ-hMBHQdYDyMbT-Enfsk0mtUIGws1WeDuOvjY4EXCH-9OK3edNLDgkc',
-			imagerySet: 'Road'
-			//            imagerySet: 'AerialWithLabels'
+		source: new ol.source.OSM({
 		})
 	});
 
@@ -708,6 +705,42 @@ function getBasinGeoJsons() {
         }, 500);
     }
 }
+
+function getHidricGeoJsons() {
+
+    let hidric = region_index3[$("#hidric").val()]['geojsons'];
+    for (let i in hidric) {
+        var regionsSource = new ol.source.Vector({
+           url: staticGeoJSON3 + hidric[i],
+           format: new ol.format.GeoJSON()
+        });
+
+        var regionStyle = new ol.style.Style({
+            stroke: new ol.style.Stroke({
+                color: '#0050a0',
+                width: 3
+            })
+        });
+
+        var regionsLayer = new ol.layer.Vector({
+            name: 'myRegion',
+            source: regionsSource,
+            style: regionStyle
+        });
+
+        map.getLayers().forEach(function(regionsLayer) {
+        if (regionsLayer.get('name')=='myRegion')
+            map.removeLayer(regionsLayer);
+        });
+        map.addLayer(regionsLayer)
+
+        setTimeout(function() {
+            var myExtent = regionsLayer.getSource().getExtent();
+            map.getView().fit(myExtent, map.getSize());
+        }, 500);
+    }
+}
+
 $('#stp-stream-toggle').on('change', function() {
     wmsLayer.setVisible($('#stp-stream-toggle').prop('checked'))
 })
@@ -720,6 +753,9 @@ $('#regions').change(function() {getRegionGeoJsons()});
 
 // Basins gizmo listener
 $('#basins').change(function() {getBasinGeoJsons()});
+
+// Hidric gizmo listener
+$('#hidric').change(function() {getHidricGeoJsons()});
 
 // Function for the select2 metric selection tool
 $(document).ready(function() {

@@ -30,6 +30,10 @@
         <br>
         {% gizmo select_input basins %}
       </div>
+      <div>
+        <br>
+        {% gizmo select_input hidric %}
+      </div>
     </div>
 </div>
 <img id="featureLoader" style="display: none; position:fixed; z-index: 100; left : 0; bottom : 0; right : 0; top : 0; margin:auto;" src="{% static 'national_water_level_forecast_ecuador/images/loader2.gif' %}">
@@ -60,8 +64,8 @@
             <div id="station-info" class="col-md-8"></div>
             <div class="col-md-4">
               <div align="right">
-                <img class="obslogos" src="{% static 'national_water_level_forecast_ecuador/images/byu_logo.png' %}">
                 <img class="obslogos" src="{% static 'national_water_level_forecast_ecuador/images/my-icon-inamhi.png' %}">
+                <img class="obslogos" src="{% static 'national_water_level_forecast_ecuador/images/byu_logo.png' %}">
                 <img class="obslogos" src="{% static 'national_water_level_forecast_ecuador/images/Servir_logo.jpeg' %}">
                 <img class="obslogos" src="{% static 'national_water_level_forecast_ecuador/images/EcoCiencia.png' %}">
               </div>
@@ -236,18 +240,19 @@
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          <h5 class="modal-title" id="help-modal-label">National Water Level Forecast</h5>
+          <h5 class="modal-title" id="help-modal-label" style="color:#20295c;"> <strong>National Water Level Forecast</strong></h5>
         </div>
         <div class="modal-body">
-          <p>La aplicación National Water Level Forecast personalizada para Ecuador es una aplicación ligera que evalua los valores simulados corregidos por el sesgo para la herramienta de predicción de caudales de GEOGloWS ECMWF en Ecuador.</p>
-          <p>Esta aplicación nos permite utilizar la funcionalidad de hydrostats para evaluar la precisión de la simulación histórica corregida por el sesgo de la herramienta de predicción de caudales de GEOGloWS ECMWF en 166 estaciones de aforo en Ecuador.</p>
+          <p>La aplicación National Water Level Forecast personalizada para Ecuador es una aplicación ligera que muestra pronóstico de nivel.</p>
+          <p>Esta aplicación nos permite utilizar la funcionalidad de hydrostats para evaluar la precisión de la simulación
+            histórica corregida por el sesgo de la herramienta de predicción de caudales de GEOGloWS ECMWF en 166 estaciones de aforo en Ecuador.</p>
           <p>Además, esta corrección de sesgo se extiende a la previsión a corto plazo de la herramienta de predicción de caudales de GEOGloWS ECMWF.</p>
-          <p>Los usuarios pueden hacer clic en cualquier estación del mapa para obtner los datos observados y simulados.</p>
+          <p>Los usuarios pueden hacer clic en cualquier estación del mapa para obtener los datos observados y simulados.</p>
           <ol>
             <li> La primera pestaña muestra un gráfico de los datos históricos observados, los datos de simulación corregidos por el sesgo de la herramienta de predicción de caudales GEOGloWS ECMWF.</li>
-            <li> La segunda pestaña muestra el Análisis Visual incluido en Hydrostats. Incluye gráficos para el caudal medio diario, el caudal medio mensual, el gráfico de dispersión y el gráfico de dispersión en la escala logarítmica.</li>
-            <li> La tercera pestaña incluye un informe de tabla con alguna lista predefinida de métricas. También permite seleccionar un conjunto de métricas que se desea utilizar para validar la simulación histórica con corrección de sesgo de la herramienta de predicción de caudales.</li>
-            <li> La cuarta pestaña muestra un gráfico con los datos de previsión corregidos por el sesgo de la herramienta de predicción de caudales de GEOGloWS ECMWF.</li>
+            <li> La segunda pestaña muestra el Análisis Visual incluido en Hydrostats. Incluye gráficos para el nivel medio diario, el nivel medio mensual, el gráfico de dispersión y el gráfico de dispersión en la escala logarítmica.</li>
+            <li> La tercera pestaña incluye un informe de tabla con alguna lista predefinida de métricas. También permite seleccionar un conjunto de métricas que se desea utilizar. </li>
+            <li> La cuarta pestaña muestra un gráfico con los datos de previsión corregidos por el sesgo.</li>
           </ol>
 
           <p style="color:#e61e29;">Disclaimer: El usuario debe considerar que estas simulaciones y pronósticos son una referencia
@@ -260,6 +265,14 @@
             <li>El usuario debe tener en cuenta la probabilidad de que una predicción no sea siempre  correcta.</li>
             <li>El usuario de esta herramienta acepta de antemano la forma y uso de la información.</li>
           </ol style="color:#e61e29;">
+
+            <div class="modal-footer">
+            <div class="FootNote">
+              <p style ><sup>
+              Fuente: la red de ríos ha sido obtenida con el modelado del GEOGloWS ECMWF;
+              Unidad Hidrográfica 3: MAATE, 2020; Demarcaciones hidrográficas: MAATE, 2014;
+              Estaciones hidrológicas: INAMHI, 2022</sup> </p>
+            </div>
 
         </div>
         <div class="modal-footer">

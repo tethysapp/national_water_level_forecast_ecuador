@@ -8,7 +8,7 @@ class NationalWaterLevelForecastEcuador(TethysAppBase):
 
     name = 'National Water Level Forecast Ecuador'
     index = 'national_water_level_forecast_ecuador:home'
-    icon = 'national_water_level_forecast_ecuador/images/NWLF.jpeg'
+    icon = 'national_water_level_forecast_ecuador/images/nwlf.jpg'
     package = 'national_water_level_forecast_ecuador'
     root_url = 'national-water-level-forecast-ecuador'
     color = '#4074dd'
