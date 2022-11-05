@@ -107,6 +107,25 @@ class NationalWaterLevelForecastEcuador(TethysAppBase):
                 url='get-forecast-ensemble-bc-data-csv',
                 controller='national_water_level_forecast_ecuador.controllers.get_forecast_ensemble_bc_data_csv'
             ),
+            UrlMap(
+                name='user_manual',
+                url='national-water-level-forecast-ecuador/user_manual',
+                controller='national_water_level_forecast_ecuador.controllers.user_manual'
+            ),
+            UrlMap(
+                name='technical_manual',
+                url='national-water-level-forecast-ecuador/technical_manual',
+                controller='national_water_level_forecast_ecuador.controllers.technical_manual'
+            ),
+            ########################################
+            ########################################
+            UrlMap(
+                name="get_zoom_array",
+                url="get-zoom-array",
+                controller="national_water_level_forecast_ecuador.controllers.get_zoom_array",
+            ),
+            ########################################
+            ########################################
         )
 
         return url_maps

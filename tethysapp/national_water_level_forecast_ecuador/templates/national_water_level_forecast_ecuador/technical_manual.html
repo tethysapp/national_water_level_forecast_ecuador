@@ -1,0 +1,39 @@
+<{% extends "national_water_level_forecast_ecuador/base.html" %}
+{% load staticfiles %}
+
+{% block import_gizmos %}
+{% endblock %}
+
+
+{% block header_buttons %}
+  <div class="header-button glyphicon-button" data-toggle="tooltip" data-placement="bottom" title="About">
+    <a data-toggle="modal" data-target="#about"><span class="glyphicon glyphicon-info-sign"></span></a>
+  </div>
+{% endblock %}
+
+{% block app_navigation_items %}
+
+{% url "national_water_level_forecast_ecuador:home" as home %}
+{% url "national_water_level_forecast_ecuador:user_manual" as user_manual %}
+{% url "national_water_level_forecast_ecuador:technical_manual" as technical_manual %}
+
+<li class="{% if request.path == home %}active{% endif %}"><a href="{{ home }}">Aplicación</a></li>
+<li class="{% if request.path == user_manual %}active{% endif %}"><a href="{{ user_manual }}">Manual de Usuario</a></li>
+<li class="{% if request.path == technical_manual %}active{% endif %}"><a href="{{ technical_manual }}">Manual Técnico</a></li>
+
+{% endblock %}
+
+{% block app_content %}
+<h1>Manual Técnico</h1>
+{% endblock %}
+
+{% block after_app_content %}
+{% endblock %}
+
+{% block app_actions %}
+{% endblock %}
+
+{% block scripts %}
+  {{ block.super }}
+  <script src="{% static 'historical_validation_tool_ecuador/js/manual.js' %}" type="text/javascript"></script>
+{% endblock %}

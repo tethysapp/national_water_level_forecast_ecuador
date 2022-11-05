@@ -8,31 +8,57 @@
 {% endblock %}
 
 {% block app_content %}
-<div id="map" class="map" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
+<div id="map" class="map" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html"
+     xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
     <div id="map-view-legend" class="map-view-legend ol-unselectable ol-control">
       <div>
         <svg width="20" height="20" viewPort="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg">
           <polyline points="19 1, 1 6, 19 14, 1 19" stroke="#4074dd" fill="transparent" stroke-width="2"/>
         </svg>
-        Streams <input id="stp-stream-toggle" class="toggle-layer" type="checkbox" checked data-toggle="toggle" data-size="mini">
+        Ríos <input id="stp-stream-toggle" class="toggle-layer" type="checkbox" checked data-toggle="toggle" data-size="mini">
       </div>
       <div>
         <svg width="20" height="20" viewPort="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg">
           <polyline points="0 10, 0 0, 10 0, 10 10, 0 10" stroke="#e61e29" fill="#e61e29" stroke-width="2"/>
         </svg>
-        Stations <input id="stp-stations-toggle" class="toggle-layer" type="checkbox" checked data-toggle="toggle" data-size="mini">
+        Estaciones <input id="stp-stations-toggle" class="toggle-layer" type="checkbox" checked data-toggle="toggle" data-size="mini">
       </div>
       <div>
         <br>
-        {% gizmo select_input regions %}
+        {% gizmo select_input2 regions %}
       </div>
       <div>
         <br>
-        {% gizmo select_input basins %}
+        {% gizmo select_input2 basins %}
       </div>
       <div>
         <br>
-        {% gizmo select_input hidric %}
+        {% gizmo select_input2 hidric %}
+      </div>
+      <div>
+        {# Search window #}
+        <div>
+          <form>
+            <label>Búsqueda de Estación: </label>
+            <input id="search-txt" type="text" class="form-control" placeholder="ejemplo" onkeyup="remove_names_for_list()">
+          </form>
+        </div>
+        {# Search list #}
+        <div id="list-search-container" class="" style="color: black;">
+          <select id="list-search" style="width: 100%;" multiple="multiple" onchange="list_search_func(value)">
+            {% for name_search in search_list %}
+              <option value="{{ name_search }}">{{ name_search }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        {# Search button #}
+        <div>
+          <button id="search-btn" style="width: 100%;"><span class="glyphicon glyphicon-search"></span></button>
+        </div>
+        {# Alert window #}
+        <div id="search-alert" class="hidden">
+          <p></p>
+        </div>
       </div>
     </div>
 </div>

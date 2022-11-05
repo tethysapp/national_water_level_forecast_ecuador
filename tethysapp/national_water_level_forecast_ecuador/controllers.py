@@ -25,10 +25,14 @@ from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 from .app import NationalWaterLevelForecastEcuador as app
 
+from .model import Stations_manage as stations
+
 def home(request):
     """
     Controller for the app home page.
     """
+
+    global foo_station
 
     # List of Metrics to include in context
     metric_loop_list = list(zip(metric_names, metric_abbr))
@@ -82,30 +86,41 @@ def home(request):
 
     region_index = json.load(open(os.path.join(os.path.dirname(__file__), 'public', 'geojson', 'index.json')))
     regions = SelectInput(
-        display_text='Zoom to a Region:',
+        display_text='Zoom a la Provincia:',
         name='regions',
         multiple=False,
-        original=True,
-        options=[(region_index[opt]['name'], opt) for opt in region_index]
+        #original=True,
+        options=[(region_index[opt]['name'], opt) for opt in region_index],
+        initial='',
+        select2_options={'placeholder': 'Seleccione provincia', 'allowClear': False}
     )
 
     region_index2 = json.load(open(os.path.join(os.path.dirname(__file__), 'public', 'geojson2', 'index2.json')))
     basins = SelectInput(
-        display_text='Zoom to a Basin:',
+        display_text='Zoom a la Cuenca:',
         name='basins',
         multiple=False,
-        original=True,
-        options=[(region_index2[opt]['name'], opt) for opt in region_index2]
+        #original=True,
+        options=[(region_index2[opt]['name'], opt) for opt in region_index2],
+        initial='',
+        select2_options={'placeholder': 'Seleccione cuenca', 'allowClear': False}
     )
 
     region_index3 = json.load(open(os.path.join(os.path.dirname(__file__), 'public', 'geojson3', 'index3.json')))
     hidric = SelectInput(
-        display_text='Zoom to a Hydrographic Unit 3:',
+        display_text='Zoom a la Unidad Hidrográfica Nivel 3:',
         name='hidric',
         multiple=False,
-        original=True,
-        options=[(region_index3[opt]['name'], opt) for opt in region_index3]
+        #original=True,
+        options=[(region_index3[opt]['name'], opt) for opt in region_index3],
+        initial='',
+        select2_options={'placeholder': 'Seleccione subcuenca', 'allowClear': False}
     )
+
+    # Load stations data (Selected_Stations_Ecuador_WL.json)
+    stations_file = os.path.join(os.path.join(app.get_app_workspace().path), 'Selected_Stations_Ecuador_WL.json')
+    foo_station = stations(path_dir=stations_file)
+    search_list = foo_station.search_list
 
 
     context = {
@@ -114,7 +129,8 @@ def home(request):
         "date_picker": date_picker,
         "regions": regions,
         "basins": basins,
-        "hidric": hidric
+        "hidric": hidric,
+        "search_list": search_list
     }
 
     return render(request, 'national_water_level_forecast_ecuador/home.html', context)
@@ -1281,3 +1297,53 @@ def get_forecast_ensemble_bc_data_csv(request):
             'error': f'{"error: " + str(e), "line: " + str(exc_tb.tb_lineno)}',
         })
 
+def user_manual(request):
+    """
+    Controller for the technical manual page.
+    """
+
+    context = {
+    }
+
+    return render(request, 'national_water_level_forecast_ecuador/user_manual.html', context)
+def technical_manual(request):
+    """
+    Controller for the user manual page.
+    """
+
+    context = {
+    }
+
+    return render(request, 'national_water_level_forecast_ecuador/technical_manual.html', context)
+
+
+############################################################
+def get_zoom_array(request):
+    zoom_description = request.GET['zoom_desc']
+
+    # Ivalid search
+    if zoom_description == '':
+        resp = {'geojson': 'COLOMBIA.json',
+                'message': 404}
+        return JsonResponse(resp)
+
+    try:
+        file_name, station_file, message, station_cont, boundary_cont = foo_station(search_id=zoom_description)
+
+        return JsonResponse({'geojson': file_name,
+                             'message': message,
+                             'stations': station_file,
+                             'stations-cont': station_cont,
+                             'boundary-cont': boundary_cont})
+
+    except Exception as e:
+
+        exc_type, exc_obj, exc_tb = sys.exc_info()
+        print("error: " + str(e))
+        print("line: " + str(exc_tb.tb_lineno))
+
+        return JsonResponse({
+            'error': f'{"error: " + str(e), "line: " + str(exc_tb.tb_lineno)}',
+        })
+
+############################################################
